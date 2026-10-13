@@ -69,7 +69,7 @@ defineExpose({ collapsed });
 
 <style scoped>
 .base-large-title {
-  padding: 0 var(--pro-space-4);
+  padding: 0 var(--pro-space-4) var(--pro-space-3);
   color: var(--pro-label);
 }
 
