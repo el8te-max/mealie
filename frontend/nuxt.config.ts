@@ -76,7 +76,7 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
-  css: ["~/assets/main.css", "~/assets/style-overrides.scss", "~/assets/pro/tokens.scss", "~/assets/pro/vuetify-overrides.scss"],
+  css: ["~/assets/main.css", "~/assets/style-overrides.scss", "~/assets/pro/tokens.scss", "~/assets/pro/vuetify-overrides.scss", "framework7-icons/css/framework7-icons.css", "@phosphor-icons/web/regular", "@phosphor-icons/web/fill"],
 
   runtimeConfig: {
     sessionPassword: process.env.SESSION_PASSWORD || "password-with-at-least-32-characters",
