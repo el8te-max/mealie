@@ -44,7 +44,11 @@ export default defineNuxtConfig({
             "https://raw.githubusercontent.com/mealie-recipes/mealie/9571816ac4eed5beacfc0abf6c03eff1427fd0eb/frontend/static/icons/android-chrome-512x512.png",
         },
         { charset: "utf-8" },
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+        { name: "apple-mobile-web-app-capable", content: "yes" },
+        { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+        { name: "theme-color", content: "#F2F2F7", media: "(prefers-color-scheme: light)" },
+        { name: "theme-color", content: "#000000", media: "(prefers-color-scheme: dark)" },
         {
           name: "description",
           content: "Mealie is a recipe management app for your kitchen.",
@@ -52,7 +56,7 @@ export default defineNuxtConfig({
       ],
       script: [
         {
-          innerHTML: `(function(){try{var d=localStorage.getItem('vueuse-color-scheme');var m=d==='dark'||(d!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.style.backgroundColor=m?'#1E1E1E':'#FFFFFF'}catch(e){}})()`,
+          innerHTML: `(function(){try{var d=localStorage.getItem('vueuse-color-scheme');var m=d==='dark'||(d!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.style.backgroundColor=m?'#000000':'#F2F2F7'}catch(e){}})()`,
           type: "text/javascript",
         },
       ],
@@ -72,7 +76,7 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
-  css: ["~/assets/main.css", "~/assets/style-overrides.scss"],
+  css: ["~/assets/main.css", "~/assets/style-overrides.scss", "~/assets/pro/tokens.scss", "~/assets/pro/vuetify-overrides.scss"],
 
   runtimeConfig: {
     sessionPassword: process.env.SESSION_PASSWORD || "password-with-at-least-32-characters",
@@ -253,6 +257,34 @@ export default defineNuxtConfig({
         fallback: "en-US",
       },
       defaults: {
+        global: {
+          ripple: false,
+        },
+        VBtn: {
+          elevation: 0,
+          rounded: "lg",
+        },
+        VCard: {
+          elevation: 0,
+          rounded: "xl",
+          flat: true,
+        },
+        VSheet: {
+          elevation: 0,
+        },
+        VList: {
+          bgColor: "transparent",
+        },
+        VTextField: {
+          variant: "solo-filled",
+          flat: true,
+          rounded: "lg",
+        },
+        VTextarea: {
+          variant: "solo-filled",
+          flat: true,
+          rounded: "lg",
+        },
         VOverlay: {
           scrollStrategy: "close",
         },
@@ -261,12 +293,21 @@ export default defineNuxtConfig({
         },
         VAutocomplete: {
           scrollStrategy: "close",
+          variant: "solo-filled",
+          flat: true,
+          rounded: "lg",
         },
         VCombobox: {
           scrollStrategy: "close",
+          variant: "solo-filled",
+          flat: true,
+          rounded: "lg",
         },
         VSelect: {
           scrollStrategy: "close",
+          variant: "solo-filled",
+          flat: true,
+          rounded: "lg",
         },
       },
     },

@@ -1,0 +1,131 @@
+// Mealie Pro design tokens: iOS system colors, type scale, spacing, radii, materials, motion.
+// Light values live on :root; dark values on Vuetify's dark theme class so both the system
+// setting and the manual dark-mode toggle switch them.
+
+:root {
+  --pro-label: #000000;
+  --pro-label-secondary: rgba(60, 60, 67, 0.6);
+  --pro-label-tertiary: rgba(60, 60, 67, 0.3);
+  --pro-separator: rgba(60, 60, 67, 0.29);
+  --pro-bg: #ffffff;
+  --pro-bg-grouped: #f2f2f7;
+  --pro-bg-elevated: #ffffff;
+  --pro-fill: rgba(118, 118, 128, 0.12);
+  --pro-fill-secondary: rgba(118, 118, 128, 0.08);
+  --pro-tint: #ff9500;
+
+  --pro-space-1: 4px;
+  --pro-space-2: 8px;
+  --pro-space-3: 12px;
+  --pro-space-4: 16px;
+  --pro-space-5: 20px;
+  --pro-space-6: 32px;
+
+  --pro-radius-control: 10px;
+  --pro-radius-card: 14px;
+  --pro-radius-sheet: 20px;
+
+  --pro-material-thin: rgba(255, 255, 255, 0.7);
+  --pro-material-regular: rgba(249, 249, 249, 0.8);
+  --pro-material-thick: rgba(255, 255, 255, 0.92);
+  --pro-blur: blur(20px) saturate(180%);
+
+  --pro-ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --pro-dur-fast: 200ms;
+  --pro-dur: 350ms;
+
+  --pro-font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+.v-theme--dark {
+  --pro-label: #ffffff;
+  --pro-label-secondary: rgba(235, 235, 245, 0.6);
+  --pro-label-tertiary: rgba(235, 235, 245, 0.3);
+  --pro-separator: rgba(84, 84, 88, 0.65);
+  --pro-bg: #000000;
+  --pro-bg-grouped: #000000;
+  --pro-bg-elevated: #1c1c1e;
+  --pro-fill: rgba(118, 118, 128, 0.24);
+  --pro-fill-secondary: rgba(118, 118, 128, 0.18);
+  --pro-tint: #ff9f0a;
+
+  --pro-material-thin: rgba(37, 37, 37, 0.7);
+  --pro-material-regular: rgba(22, 22, 22, 0.8);
+  --pro-material-thick: rgba(30, 30, 30, 0.92);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root,
+  .v-theme--dark {
+    --pro-material-thin: var(--pro-bg-elevated);
+    --pro-material-regular: var(--pro-bg-elevated);
+    --pro-material-thick: var(--pro-bg-elevated);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --pro-dur-fast: 0ms;
+    --pro-dur: 0ms;
+  }
+}
+
+body,
+.v-application {
+  font-family: var(--pro-font) !important;
+  -webkit-font-smoothing: antialiased;
+  color: var(--pro-label);
+}
+
+// iOS text styles (size / line-height / weight)
+.pro-large-title {
+  font-size: 34px;
+  line-height: 41px;
+  font-weight: 700;
+  letter-spacing: 0.37px;
+}
+.pro-title1 {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+}
+.pro-title2 {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+}
+.pro-title3 {
+  font-size: 20px;
+  line-height: 25px;
+  font-weight: 600;
+}
+.pro-headline {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 600;
+}
+.pro-body {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 400;
+}
+.pro-callout {
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 400;
+}
+.pro-subhead {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 400;
+}
+.pro-footnote {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 400;
+}
+.pro-caption {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+}
