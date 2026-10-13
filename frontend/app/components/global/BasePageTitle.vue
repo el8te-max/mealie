@@ -1,20 +1,32 @@
 <template>
-  <div class="mt-4">
-    <section class="d-flex flex-column align-center">
+  <div class="base-page-title">
+    <div
+      v-if="$slots.header"
+      class="base-page-title__header"
+    >
       <slot name="header" />
-      <h2 class="text-h5">
+    </div>
+    <BaseLargeTitle>
+      <template #title>
         <slot name="title">
           👋 Here's a Title
         </slot>
-      </h2>
-
-      <h3 class="subtitle-1">
-        <slot />
-      </h3>
-    </section>
-    <section class="d-flex">
-      <slot name="content" />
-    </section>
+      </template>
+      <template
+        v-if="$slots.default || $slots.content"
+        #bottom
+      >
+        <p
+          v-if="$slots.default"
+          class="base-page-title__subtitle pro-subhead"
+        >
+          <slot />
+        </p>
+        <section class="d-flex">
+          <slot name="content" />
+        </section>
+      </template>
+    </BaseLargeTitle>
     <v-divider
       v-if="divider"
       class="my-4"
@@ -23,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+import BaseLargeTitle from "./BaseLargeTitle.vue";
+
 defineProps({
   divider: {
     type: Boolean,
@@ -32,9 +46,18 @@ defineProps({
 </script>
 
 <style scoped>
-.subtitle-1 {
-  font-size: 1rem;
-  font-weight: normal;
-  color: var(--v-text-caption);
+.base-page-title__header {
+  display: flex;
+  padding: var(--pro-space-4) var(--pro-space-4) 0;
+}
+
+.base-page-title__header :deep(.v-img) {
+  max-width: 64px !important;
+  max-height: 64px;
+}
+
+.base-page-title__subtitle {
+  margin: 0;
+  color: var(--pro-label-secondary);
 }
 </style>
