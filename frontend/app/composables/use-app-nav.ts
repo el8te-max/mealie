@@ -13,6 +13,8 @@ export interface NavItem {
   /** Framework7 icon name */
   icon: string;
   to?: string;
+  /** Path prefix that marks this item active, when wider than `to`. */
+  match?: string;
   action?: NavAction;
   restricted: boolean;
   children?: NavItem[];
@@ -84,7 +86,7 @@ export function buildAppNav(ctx: NavContext): AppNav {
 
   const tabs = filterItems([
     recipes,
-    { ...mealPlan, title: t("pro.plan") },
+    { ...mealPlan, title: t("pro.plan"), match: "/household/mealplan" },
     { ...shopping, title: t("pro.shopping") },
     item("cookbooks", t("cookbook.cookbooks"), "bookmark", `${g}/cookbooks`),
     item("more", t("pro.more"), "ellipsis_circle", "/more", false),
@@ -171,6 +173,18 @@ function cookbookItems(ctx: NavContext, g: string): NavItem[] {
   others.sort((a, b) => a.title.localeCompare(b.title));
 
   return ctx.loggedIn && ctx.hideOtherHouseholds ? own : [...own, ...others];
+}
+
+/** Key of the most specific (longest) item whose `match` or `to` prefixes `path`. */
+export function findActiveKey(items: NavItem[], path: string): string | undefined {
+  let best: { key: string; length: number } | undefined;
+  for (const item of items) {
+    const prefix = item.match ?? item.to;
+    if (prefix && (path === prefix || path.startsWith(`${prefix}/`)) && prefix.length > (best?.length ?? -1)) {
+      best = { key: item.key, length: prefix.length };
+    }
+  }
+  return best?.key;
 }
 
 /** Reactive navigation for the current user and route. */
