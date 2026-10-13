@@ -10,8 +10,8 @@
       >
         <template #activator="{ props: activatorProps }">
           <v-btn
-            color="accent"
-            variant="elevated"
+            color="primary"
+            variant="tonal"
             v-bind="activatorProps"
           >
             <v-icon>
@@ -38,8 +38,8 @@
         v-if="bulkActions.length > 0"
         :disabled="selected.length < 1"
         mode="event"
-        color="info"
-        variant="elevated"
+        color="primary"
+        variant="tonal"
         :items="bulkActions"
         v-on="bulkActionListener"
       />
@@ -48,8 +48,11 @@
     <div class="mx-2 clip-width">
       <v-text-field
         v-model="search"
-        variant="underlined"
-        :label="$t('search.search')"
+        :placeholder="$t('search.search')"
+        :prepend-inner-icon="$globals.icons.search"
+        density="compact"
+        hide-details
+        class="mb-3"
       />
     </div>
     <v-data-table
@@ -61,7 +64,7 @@
       :items="data || []"
       :items-per-page="15"
       :search="search"
-      class="elevation-2"
+      class="crud-table"
     >
       <template
         v-for="header in headersWithoutActions"
@@ -96,7 +99,8 @@
     <v-card-actions class="justify-end">
       <slot name="button-bottom" />
       <BaseButton
-        color="info"
+        color="primary"
+        variant="tonal"
         @click="downloadAsJson(data, 'export.json')"
       >
         <template #icon>
@@ -228,5 +232,25 @@ const search = ref("");
 }
 .v-btn--disabled {
   opacity: 0.5 !important;
+}
+</style>
+
+<style scoped>
+.crud-table {
+  border-radius: var(--pro-radius-card);
+  background: var(--pro-bg-elevated) !important;
+  overflow: hidden;
+}
+
+.crud-table :deep(th) {
+  font-size: 13px;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  color: var(--pro-label-secondary) !important;
+}
+
+.crud-table :deep(td),
+.crud-table :deep(th) {
+  border-bottom: 0.5px solid var(--pro-separator) !important;
 }
 </style>

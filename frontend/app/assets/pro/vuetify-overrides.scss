@@ -96,3 +96,48 @@
 .v-checkbox-btn .v-selection-control__input > .v-icon {
   border-radius: 50%;
 }
+
+// Dialogs: sheet radius, grouped background.
+.v-dialog:not(.v-dialog--fullscreen) > .v-overlay__content > .v-card {
+  border-radius: var(--pro-radius-sheet) !important;
+  background: var(--pro-bg-grouped) !important;
+}
+
+.v-bottom-sheet > .v-overlay__content > .v-card {
+  border-radius: var(--pro-radius-sheet) var(--pro-radius-sheet) 0 0 !important;
+  background: var(--pro-bg-grouped) !important;
+}
+
+.v-overlay__scrim {
+  background: #000 !important;
+  opacity: 0.35 !important;
+}
+
+// Menus and context menus: blurred thick material, 14px radius, 44px hairline rows.
+.v-menu > .v-overlay__content > .v-list,
+.v-menu > .v-overlay__content > .v-card {
+  border-radius: var(--pro-radius-card) !important;
+  background: var(--pro-material-thick) !important;
+  backdrop-filter: var(--pro-blur);
+  -webkit-backdrop-filter: var(--pro-blur);
+  padding: 0 !important;
+
+  .v-list {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .v-list-item + .v-list-item {
+    border-top: 0.5px solid var(--pro-separator);
+  }
+}
+
+// Toasts: blurred pill.
+.v-snackbar .v-snackbar__wrapper {
+  border-radius: 999px !important;
+  background: var(--pro-material-thick) !important;
+  backdrop-filter: var(--pro-blur);
+  -webkit-backdrop-filter: var(--pro-blur);
+  color: var(--pro-label) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
+}

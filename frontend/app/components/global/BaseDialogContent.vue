@@ -6,19 +6,11 @@
         indeterminate
       />
     </template>
-    <v-toolbar
-      dark
-      density="comfortable"
-      :color="color"
-      class="px-3 position-relative top-0 left-0 w-100"
-    >
-      <v-icon size="large">
-        {{ icon }}
-      </v-icon>
-      <v-toolbar-title class="headline">
+    <header class="base-dialog-content__header">
+      <h2 class="pro-headline">
         {{ title }}
-      </v-toolbar-title>
-    </v-toolbar>
+      </h2>
+    </header>
 
     <div style="flex: 1 1 auto; min-height: 0; overflow: auto">
       <slot />
@@ -30,7 +22,7 @@
       <slot name="card-actions">
         <v-btn
           variant="text"
-          color="grey"
+          color="primary"
           @click="emit('cancel')"
         >
           {{ cancelLabel }}
@@ -125,6 +117,15 @@ const cancelLabel = computed(() => props.cancelText ?? i18n.t("general.cancel"))
 </script>
 
 <style scoped>
+.base-dialog-content__header {
+  padding: var(--pro-space-4) var(--pro-space-4) var(--pro-space-2);
+  text-align: center;
+}
+
+.base-dialog-content__header h2 {
+  margin: 0;
+}
+
 /* On extra-small displays the dialog is a bottom sheet or fullscreen, so the
    actions stretch evenly across the full width. Larger displays keep the
    default v-card-actions flex row, where the spacer pushes the actions right. */

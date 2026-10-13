@@ -3,13 +3,12 @@
     <v-snackbar
       v-model="toastAlert.open"
       location="top"
-      :color="toastAlert.color"
       :timeout="toastAlert.timeout ?? 2000"
     >
       <v-icon
         v-if="icon"
-        dark
         start
+        :color="toastAlert.color"
         :icon="icon"
       />
 
@@ -19,6 +18,7 @@
       <template #actions>
         <v-btn
           variant="text"
+          color="primary"
           @click="() => {
             toastAlert.action?.onClick();
             toastAlert.open = false
@@ -34,7 +34,6 @@
       density="compact"
       location="bottom"
       :timeout="-1"
-      :color="toastLoading.color"
     >
       <div
         class="d-flex flex-column align-center justify-start"
@@ -45,7 +44,7 @@
         </div>
         <v-progress-linear
           indeterminate
-          color="white-darken-2"
+          color="primary"
         />
       </div>
     </v-snackbar>
