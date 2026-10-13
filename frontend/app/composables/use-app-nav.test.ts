@@ -70,7 +70,9 @@ describe("buildAppNav", () => {
     expect(buildAppNav(ctx()).createMethods.map(m => m.key)).not.toContain("ai");
     const methods = buildAppNav(ctx({ aiEnabled: true })).createMethods;
     expect(methods.map(m => m.key)).toContain("ai");
-    expect(methods).toHaveLength(7);
+    expect(methods).toHaveLength(6);
+    // Upstream folded the photo importer into AI; /r/create/image only redirects to /r/create/ai.
+    expect(methods.map(m => m.key)).not.toContain("image");
     expect(methods.find(m => m.key === "url")!.to).toBe("/g/home/r/create/url");
   });
 

@@ -132,7 +132,6 @@ export function buildAppNav(ctx: NavContext): AppNav {
   const create = (key: string, title: string, icon: string, path: string) => item(key, title, icon, `${g}/r/create/${path}`);
   const createMethods = filterItems(compact([
     create("url", t("pro.import-url"), "link", "url"),
-    create("image", t("pro.import-photo"), "camera", "image"),
     ctx.aiEnabled && create("ai", t("recipe.import-with-ai"), "sparkles", "ai"),
     create("html", t("recipe.import-from-html-or-json"), "chevron_left_slash_chevron_right", "html"),
     create("zip", t("recipe.import-from-zip"), "archivebox", "zip"),

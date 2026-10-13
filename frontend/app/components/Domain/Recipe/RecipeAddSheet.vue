@@ -26,7 +26,6 @@ const nav = useAppNav();
 // iOS system colors for the method icon tiles.
 const colors: Record<string, string> = {
   url: "#007AFF",
-  image: "#34C759",
   ai: "#AF52DE",
   html: "#FF9500",
   zip: "#8E8E93",
