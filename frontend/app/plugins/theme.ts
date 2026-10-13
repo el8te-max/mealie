@@ -1,3 +1,5 @@
+import { applyTint, readStoredTint, TINTS, useTint } from "~/composables/use-tint";
+
 export interface ThemeConfig {
   lightPrimary: string;
   lightAccent: string;
@@ -37,6 +39,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       theme = await fetchTheme();
       __cachedTheme = theme;
     }
+    // Mealie Pro: the per-device accent tint replaces the server's primary color.
+    const tint = import.meta.client ? readStoredTint() : "orange";
     vuetifyOptions.theme = {
       defaultTheme: nuxtApp.$config.public.useDark ? "dark" : "light",
       variations: {
@@ -48,7 +52,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         light: {
           dark: false,
           colors: {
-            primary: theme?.lightPrimary ?? "#E58325",
+            primary: TINTS[tint].light,
             accent: theme?.lightAccent ?? "#007A99",
             secondary: theme?.lightSecondary ?? "#973542",
             success: theme?.lightSuccess ?? "#43A047",
@@ -62,7 +66,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         dark: {
           dark: true,
           colors: {
-            primary: theme?.darkPrimary ?? "#E58325",
+            primary: TINTS[tint].dark,
             accent: theme?.darkAccent ?? "#007A99",
             secondary: theme?.darkSecondary ?? "#973542",
             success: theme?.darkSuccess ?? "#43A047",
@@ -75,5 +79,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         },
       },
     };
+  });
+
+  nuxtApp.hook("vuetify:ready", (vuetify) => {
+    if (!import.meta.client) {
+      return;
+    }
+    const { tint } = useTint();
+    watch(tint, key => applyTint(key, vuetify.theme), { immediate: true });
   });
 });

@@ -12,7 +12,7 @@
   --pro-bg-elevated: #ffffff;
   --pro-fill: rgba(118, 118, 128, 0.12);
   --pro-fill-secondary: rgba(118, 118, 128, 0.08);
-  --pro-tint: #ff9500;
+  --pro-tint: var(--pro-tint-light, #ff9500);
 
   --pro-space-1: 4px;
   --pro-space-2: 8px;
@@ -47,7 +47,7 @@
   --pro-bg-elevated: #1c1c1e;
   --pro-fill: rgba(118, 118, 128, 0.24);
   --pro-fill-secondary: rgba(118, 118, 128, 0.18);
-  --pro-tint: #ff9f0a;
+  --pro-tint: var(--pro-tint-dark, #ff9f0a);
 
   --pro-material-thin: rgba(37, 37, 37, 0.7);
   --pro-material-regular: rgba(22, 22, 22, 0.8);
