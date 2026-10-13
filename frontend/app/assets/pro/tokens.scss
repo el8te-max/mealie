@@ -129,3 +129,36 @@ body,
   line-height: 16px;
   font-weight: 400;
 }
+
+// Page transitions ride on the View Transitions API (nuxt `app.viewTransition`):
+// a short push slide on phones, the default crossfade on wider screens, none under reduced motion.
+@keyframes pro-push-out {
+  to {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+
+@keyframes pro-push-in {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+
+@media (max-width: 767px) {
+  ::view-transition-old(root) {
+    animation: pro-push-out var(--pro-dur) var(--pro-ease-spring) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: pro-push-in var(--pro-dur) var(--pro-ease-spring) both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

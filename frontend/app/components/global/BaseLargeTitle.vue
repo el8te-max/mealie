@@ -3,6 +3,8 @@
     <div
       class="base-large-title__bar"
       :class="{ 'is-visible': collapsed }"
+      :aria-hidden="!collapsed"
+      :inert="!collapsed"
     >
       <div class="base-large-title__side">
         <slot name="leading" />
