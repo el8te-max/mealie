@@ -37,10 +37,14 @@
   }
 }
 
-// Cards sit on the elevated background with the card radius.
+// Cards sit on the elevated background with the card radius. Cards with a color prop
+// (Vuetify `bg-*` classes) keep their color so on-color text stays readable.
 .v-card {
-  background: var(--pro-bg-elevated) !important;
   border-radius: var(--pro-radius-card) !important;
+}
+
+.v-card:not([class*="bg-"]) {
+  background: var(--pro-bg-elevated) !important;
 }
 
 // Inputs: filled, rounded, no underline.

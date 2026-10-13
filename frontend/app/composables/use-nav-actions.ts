@@ -10,6 +10,7 @@ export function useNavActions() {
   const toggleDark = useToggleDarkMode();
   const languageDialog = useState("pro-language-dialog", () => false);
   const announcementsDialog = useState("pro-announcements-dialog", () => false);
+  const searchRequests = useState("pro-search-requests", () => 0);
 
   async function handleNavAction(action: NavAction) {
     switch (action) {
@@ -33,8 +34,12 @@ export function useNavActions() {
       case "announcements":
         announcementsDialog.value = true;
         break;
+      case "search":
+        // DefaultLayout owns the search dialog and opens it whenever this counter changes.
+        searchRequests.value++;
+        break;
     }
   }
 
-  return { handleNavAction, languageDialog, announcementsDialog };
+  return { handleNavAction, languageDialog, announcementsDialog, searchRequests };
 }

@@ -1,5 +1,5 @@
 <template>
-  <Teleport to="body">
+  <Teleport :to="teleportTarget">
     <Transition name="base-sheet">
       <div
         v-if="modelValue"
@@ -58,6 +58,12 @@ const emit = defineEmits<{
 }>();
 
 const isPhone = useMediaQuery("(max-width: 767px)");
+// Teleport inside the Vuetify app (not <body>) so the .v-theme--dark tokens cascade into the sheet.
+const teleportTarget = ref<HTMLElement | string>("body");
+
+function resolveTeleportTarget() {
+  teleportTarget.value = document.querySelector<HTMLElement>(".v-application") ?? "body";
+}
 const panel = ref<HTMLElement | null>(null);
 let previousFocus: HTMLElement | null = null;
 
@@ -67,6 +73,8 @@ function close() {
 
 watch(() => props.modelValue, async (open) => {
   if (open) {
+    // Resolved on open, not at setup: the app root may not be mounted yet when this component is created.
+    resolveTeleportTarget();
     previousFocus = document.activeElement as HTMLElement | null;
     await nextTick();
     panel.value?.focus();

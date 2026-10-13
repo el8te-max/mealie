@@ -20,7 +20,7 @@ export const TINT_STORAGE_KEY = "mealie-pro-tint";
 const DEFAULT_TINT: TintKey = "orange";
 
 export function resolveTint(raw: unknown): TintKey {
-  return typeof raw === "string" && raw in TINTS ? (raw as TintKey) : DEFAULT_TINT;
+  return typeof raw === "string" && Object.hasOwn(TINTS, raw) ? (raw as TintKey) : DEFAULT_TINT;
 }
 
 /** Reads the stored tint without VueUse, for use before the app mounts. */

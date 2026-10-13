@@ -112,4 +112,24 @@ describe("buildAppNav", () => {
       expect(actions).toContain(action);
     }
   });
+
+  test("without a group slug, links never point at /g/", () => {
+    const nav = buildAppNav(ctx({ groupSlug: "", loggedIn: false, isOwnGroup: false, userId: undefined }));
+    const routes = allItems(nav).map(i => i.to).filter(Boolean) as string[];
+    expect(routes.some(r => r.startsWith("/g/"))).toBe(false);
+    expect(nav.tabs.find(t => t.key === "recipes")!.to).toBe("/");
+  });
+
+  test("More lists cookbooks so phone visitors can reach public ones", () => {
+    const cookbooks = [cookbook("weeknight", 1, "h1", "Mine")];
+    const nav = buildAppNav(ctx({ loggedIn: false, isOwnGroup: false, userId: undefined, cookbooks }));
+    const section = nav.more.find(g => g.key === "cookbooks");
+    expect(section!.items.map(i => i.to)).toEqual(["/g/home/cookbooks/weeknight"]);
+  });
+
+  test("recipe search is offered in the sidebar and on More", () => {
+    const nav = buildAppNav(ctx());
+    expect(nav.sidebar.flatMap(s => s.items).some(i => i.action === "search")).toBe(true);
+    expect(nav.more.flatMap(g => g.items).some(i => i.action === "search")).toBe(true);
+  });
 });

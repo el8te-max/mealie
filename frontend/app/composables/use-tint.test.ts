@@ -11,6 +11,12 @@ describe("resolveTint", () => {
     expect(resolveTint(null)).toBe("orange");
     expect(resolveTint(42)).toBe("orange");
   });
+
+  test("rejects inherited object keys", () => {
+    expect(resolveTint("constructor")).toBe("orange");
+    expect(resolveTint("__proto__")).toBe("orange");
+    expect(resolveTint("toString")).toBe("orange");
+  });
 });
 
 describe("useTint", () => {

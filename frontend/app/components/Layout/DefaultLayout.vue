@@ -7,6 +7,7 @@
     <TheSnackbar />
     <AnnouncementDialog v-model="announcementsDialog" />
     <LanguageDialog v-model="languageDialog" />
+    <RecipeDialogSearch ref="searchDialog" />
 
     <TheSidebar
       v-if="isWide"
@@ -31,6 +32,7 @@
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
 import AnnouncementDialog from "~/components/Domain/Announcement/AnnouncementDialog.vue";
+import RecipeDialogSearch from "~/components/Domain/Recipe/RecipeDialogSearch.vue";
 import TheSidebar from "~/components/Layout/LayoutParts/TheSidebar.vue";
 import TheTabBar from "~/components/Layout/LayoutParts/TheTabBar.vue";
 import { useAppNav } from "~/composables/use-app-nav";
@@ -39,7 +41,21 @@ import { useNavActions } from "~/composables/use-nav-actions";
 const route = useRoute();
 const display = useDisplay();
 const nav = useAppNav();
-const { handleNavAction, languageDialog, announcementsDialog } = useNavActions();
+const { handleNavAction, languageDialog, announcementsDialog, searchRequests } = useNavActions();
+
+// Global recipe search, formerly in AppHeader: opened from the sidebar/More or with "/".
+const searchDialog = ref<InstanceType<typeof RecipeDialogSearch> | null>(null);
+watch(searchRequests, () => searchDialog.value?.open());
+
+function onKeydown(e: KeyboardEvent) {
+  const activeTag = document.activeElement?.tagName;
+  if (e.key === "/" && activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+    e.preventDefault();
+    searchDialog.value?.open();
+  }
+}
+onMounted(() => document.addEventListener("keydown", onKeydown));
+onBeforeUnmount(() => document.removeEventListener("keydown", onKeydown));
 
 const isWide = computed(() => display.width.value >= 768);
 const sidebarCollapsed = useLocalStorage("mealie-pro-sidebar-collapsed", false);

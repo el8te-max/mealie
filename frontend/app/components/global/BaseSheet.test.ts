@@ -28,6 +28,16 @@ describe("BaseSheet", () => {
     expect(dialog.querySelector(".content")?.textContent).toBe("Pick a method");
   });
 
+  test("teleports inside the Vuetify app so dark-theme tokens apply", async () => {
+    // The sheet is set up before the app root is in the DOM (child setup runs before parent mount).
+    const wrapper = mountSheet(false);
+    const app = document.createElement("div");
+    app.className = "v-application v-theme--dark";
+    document.body.appendChild(app);
+    await wrapper.setProps({ modelValue: true });
+    expect(app.querySelector("[role=dialog]")).not.toBeNull();
+  });
+
   test("closes on backdrop click", async () => {
     const wrapper = mountSheet(true);
     (document.body.querySelector(".base-sheet__backdrop") as HTMLElement).click();

@@ -5,7 +5,7 @@ import { useCookbookPreferences } from "~/composables/use-users/preferences";
 import { useCookbookStore, usePublicCookbookStore } from "~/composables/store/use-cookbook-store";
 import { useAnnouncements } from "~/composables/use-announcements";
 
-export type NavAction = "logout" | "login" | "toggle-dark" | "language" | "announcements";
+export type NavAction = "logout" | "login" | "toggle-dark" | "language" | "announcements" | "search";
 
 export interface NavItem {
   key: string;
@@ -66,13 +66,17 @@ export function buildAppNav(ctx: NavContext): AppNav {
   const item = (key: string, title: string, icon: string, to: string, restricted = true): NavItem => ({ key, title, icon, to, restricted });
   const action = (key: NavAction, title: string, icon: string): NavItem => ({ key, title, icon, action: key, restricted: false });
 
-  const recipes = item("recipes", t("general.recipes"), "book", g, false);
-  const finder = item("finder", t("recipe-finder.recipe-finder"), "search", `${g}/recipes/finder`, false);
+  // Without a group slug (e.g. a visitor opening /more directly) group pages have no valid URL:
+  // Recipes goes to "/" (which redirects to the default group) and group-scoped links are dropped.
+  const hasGroup = !!ctx.groupSlug;
+  const recipes = item("recipes", t("general.recipes"), "book", hasGroup ? g : "/", false);
+  const search = action("search", t("search.search"), "search");
+  const finder = hasGroup && item("finder", t("recipe-finder.recipe-finder"), "search", `${g}/recipes/finder`, false);
   const favorites = ctx.loggedIn && ctx.userId ? item("favorites", t("general.favorites"), "heart", `/user/${ctx.userId}/favorites`) : undefined;
-  const timeline = item("timeline", t("recipe.timeline"), "clock", `${g}/recipes/timeline`);
-  const categories = item("categories", t("sidebar.categories"), "square_grid_2x2", `${g}/recipes/categories`);
-  const tags = item("tags", t("sidebar.tags"), "tag", `${g}/recipes/tags`);
-  const tools = item("tools", t("tool.tools"), "flame", `${g}/recipes/tools`);
+  const timeline = hasGroup && item("timeline", t("recipe.timeline"), "clock", `${g}/recipes/timeline`);
+  const categories = hasGroup && item("categories", t("sidebar.categories"), "square_grid_2x2", `${g}/recipes/categories`);
+  const tags = hasGroup && item("tags", t("sidebar.tags"), "tag", `${g}/recipes/tags`);
+  const tools = hasGroup && item("tools", t("tool.tools"), "flame", `${g}/recipes/tools`);
   const mealPlan = item("plan", t("meal-plan.meal-planner"), "calendar", "/household/mealplan/planner/view");
   const shopping = item("shopping", t("shopping-list.shopping-lists"), "cart", "/shopping-lists");
   const profile = ctx.loggedIn ? item("profile", t("settings.profile"), "person_crop_circle", "/user/profile") : undefined;
@@ -84,13 +88,13 @@ export function buildAppNav(ctx: NavContext): AppNav {
   const announcements = ctx.loggedIn && ctx.announcementsEnabled ? action("announcements", t("announcements.announcements"), "megaphone") : undefined;
   const session = ctx.loggedIn ? action("logout", t("user.logout"), "arrow_right_square") : action("login", t("user.login"), "arrow_left_square");
 
-  const tabs = filterItems([
+  const tabs = filterItems(compact([
     recipes,
     { ...mealPlan, title: t("pro.plan"), match: "/household/mealplan" },
     { ...shopping, title: t("pro.shopping") },
-    item("cookbooks", t("cookbook.cookbooks"), "bookmark", `${g}/cookbooks`),
+    hasGroup && item("cookbooks", t("cookbook.cookbooks"), "bookmark", `${g}/cookbooks`),
     item("more", t("pro.more"), "ellipsis_circle", "/more", false),
-  ]);
+  ]));
 
   const adminItems = [
     item("site-settings", t("settings.site-settings"), "gear_alt", "/admin/site-settings"),
@@ -102,9 +106,9 @@ export function buildAppNav(ctx: NavContext): AppNav {
   ];
 
   const sidebar = sections([
-    { key: "library", title: t("pro.library"), items: compact([recipes, finder, favorites, timeline, categories, tags, tools]) },
+    { key: "library", title: t("pro.library"), items: compact([search, recipes, finder, favorites, timeline, categories, tags, tools]) },
     { key: "planning", title: t("pro.planning"), items: [mealPlan, shopping] },
-    { key: "cookbooks", title: t("cookbook.cookbooks"), items: cookbookItems(ctx, g) },
+    hasGroup && { key: "cookbooks", title: t("cookbook.cookbooks"), items: cookbookItems(ctx, g) },
     {
       key: "settings",
       title: t("general.settings"),
@@ -122,7 +126,8 @@ export function buildAppNav(ctx: NavContext): AppNav {
   ]);
 
   const more = sections([
-    { key: "library", title: t("pro.library"), items: compact([finder, favorites, timeline, categories, tags, tools]) },
+    { key: "library", title: t("pro.library"), items: compact([search, finder, favorites, timeline, categories, tags, tools]) },
+    hasGroup && { key: "cookbooks", title: t("cookbook.cookbooks"), items: cookbookItems(ctx, g) },
     { key: "account", title: t("pro.account"), items: compact([profile, household, dataManagement, migrations]) },
     ctx.isAdmin && { key: "admin", title: t("settings.admin-settings"), items: adminItems },
     { key: "appearance", title: t("pro.appearance"), items: compact([darkMode, language, announcements]) },
@@ -130,14 +135,16 @@ export function buildAppNav(ctx: NavContext): AppNav {
   ]);
 
   const create = (key: string, title: string, icon: string, path: string) => item(key, title, icon, `${g}/r/create/${path}`);
-  const createMethods = filterItems(compact([
-    create("url", t("pro.import-url"), "link", "url"),
-    ctx.aiEnabled && create("ai", t("recipe.import-with-ai"), "sparkles", "ai"),
-    create("html", t("recipe.import-from-html-or-json"), "chevron_left_slash_chevron_right", "html"),
-    create("zip", t("recipe.import-from-zip"), "archivebox", "zip"),
-    create("bulk", t("recipe.bulk-url-import"), "square_stack_3d_up", "bulk"),
-    create("manual", t("pro.create-manually"), "pencil", "new"),
-  ]));
+  const createMethods = !hasGroup
+    ? []
+    : filterItems(compact([
+        create("url", t("pro.import-url"), "link", "url"),
+        ctx.aiEnabled && create("ai", t("recipe.import-with-ai"), "sparkles", "ai"),
+        create("html", t("recipe.import-from-html-or-json"), "chevron_left_slash_chevron_right", "html"),
+        create("zip", t("recipe.import-from-zip"), "archivebox", "zip"),
+        create("bulk", t("recipe.bulk-url-import"), "square_stack_3d_up", "bulk"),
+        create("manual", t("pro.create-manually"), "pencil", "new"),
+      ]));
 
   return { tabs, sidebar, more, createMethods };
 }
@@ -196,7 +203,15 @@ export function useAppNav() {
   const cookbookPreferences = useCookbookPreferences();
   const { announcementsEnabled } = useAnnouncements();
 
-  const groupSlug = computed(() => (route.params.groupSlug as string) || auth.user.value?.groupSlug || "");
+  // Remember the last group a visitor browsed so slug-less pages (/more) keep group links working.
+  const lastGroupSlug = useState("pro-last-group-slug", () => "");
+  const currentSlug = computed(() => (route.params.groupSlug as string) || auth.user.value?.groupSlug || "");
+  watch(currentSlug, (slug) => {
+    if (slug) {
+      lastGroupSlug.value = slug;
+    }
+  }, { immediate: true });
+  const groupSlug = computed(() => currentSlug.value || lastGroupSlug.value);
   const ownCookbookStore = computed(() => (isOwnGroup.value ? useCookbookStore(i18n) : null));
   const publicCookbookStores: Record<string, ReturnType<typeof usePublicCookbookStore>> = {};
 
